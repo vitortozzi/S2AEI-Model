@@ -5,6 +5,7 @@
  */
 package Model.Database;
 
+import Model.Tabelas.Avaliador;
 import Model.Tabelas.Projeto;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -54,22 +55,22 @@ public class ProjetoDAO {
         return true;
     }
 
-    public void addLiderParticipante(String nome){
-        
+    public void addLiderParticipante(String nome) {
+
         String sql = "INSERT INTO participa (id_projeto, email_aluno) VALUES ((SELECT MAX(id) FROM projeto), "
                 + "(SELECT email FROM usuario WHERE usuario.nome = (?));";
-        
-        try{
+
+        try {
             pstm = connection.prepareStatement(sql);
             pstm.setString(1, nome);
             pstm.execute();
             pstm.close();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        
+
     }
-    
+
     public void populaRespostas() {
 
         String sql = "INSERT INTO respostas (id_projeto, id_pergunta) values ((SELECT MAX(id) FROM projeto) , ?)";
@@ -321,12 +322,12 @@ public class ProjetoDAO {
             try {
                 pstm = connection.prepareStatement(sql);
                 pstm.setInt(1, id_projeto);
-                pstm.execute();                
+                pstm.execute();
                 return true;
             } catch (SQLException e) {
                 throw new RuntimeException(e);
-            }           
-        }else{
+            }
+        } else {
             return false;
         }
     }
@@ -356,5 +357,48 @@ public class ProjetoDAO {
         }
 
         return respostas;
+    }
+
+    public boolean setAvaliadorProjeto(Avaliador avaliador, Projeto projeto) {
+
+        String sql = "INSERT INTO avalia (email_avaliador, id_projeto) VALUES ((SELECT email FROM usuario"
+                + " WHERE nome = (?)), ?)  ";
+
+        try {
+            pstm = connection.prepareStatement(sql);
+            pstm.setString(1, avaliador.getNome());
+            pstm.setInt(1, projeto.getId());
+
+            pstm.execute();
+            pstm.close();
+
+            populaAvalicacao(avaliador, projeto);
+
+            return true;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public void populaAvalicacao(Avaliador avaliador, Projeto projeto) {
+
+        String sql = "INSERT INTO avaliacao (id_projeto, id_pergunta, email_avaliador) VALUES"
+                + " (?, ?, (SELECT email FROM usuario WHERE nome = (?)))";
+
+        try {
+            for (int i = 1; i < 10; i++) {
+                pstm = connection.prepareStatement(sql);
+                pstm.setInt(1, projeto.getId());
+                pstm.setInt(2, i);
+                pstm.setString(3, avaliador.getNome());             
+                pstm.execute();
+            }
+            pstm.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
