@@ -211,7 +211,7 @@ public class ProjetoDAO {
 
         return projetos;
     }
-
+    
     public ArrayList<String> getRespostas(int id) {
 
         ArrayList<String> respostas = new ArrayList<>();
@@ -269,7 +269,7 @@ public class ProjetoDAO {
 
     public Projeto getProjetoPorID(int id) {
 
-        String sql = "SELECT titulo, descricao, status, area FROM projeto WHERE id = (?)";
+        String sql = "SELECT titulo, descricao, status, area, email_orientador, email_lider FROM projeto WHERE id = (?)";
 
         try {
             pstm = connection.prepareStatement(sql);
@@ -283,6 +283,8 @@ public class ProjetoDAO {
                 p.setDescricao(rs.getString(2));
                 p.setStatus(rs.getString(3));
                 p.setArea(rs.getString(4));
+                p.setOrientador(rs.getString(5));
+                p.setLider(rs.getString(6));
             }
             pstm.close();
             return p;
@@ -332,6 +334,21 @@ public class ProjetoDAO {
         }
     }
 
+    public boolean alteraStatusProjetoAprovado(String emailLider, String novoStatus) {
+        String sql = "UPDATE projeto SET status = (?) WHERE email_lider = (?)";
+
+        try {
+            pstm = connection.prepareStatement(sql);
+            pstm.setString(1, novoStatus);
+            pstm.setString(2, emailLider);
+            pstm.execute();
+            
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+    
     public ArrayList<String> checkRespostas(int id_projeto) {
 
         ArrayList<String> respostas = new ArrayList<>();
