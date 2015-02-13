@@ -299,10 +299,10 @@ public class ProjetoDAO {
         try {
             pstm = connection.prepareStatement(sql);
             for (int i = 0; i < 9; i++) {
-                pstm.setString(1, p.getRespostas().get(i));
-                pstm.setInt(2, p.getId());
+                pstm.setString(1, projeto.getRespostas().get(i));
+                pstm.setInt(2, projeto.getId());
                 pstm.setInt(3, i + 1);
-                pstm.setInt(4, p.getId());
+                pstm.setInt(4, projeto.getId());
                 pstm.execute();
             }
             pstm.close();

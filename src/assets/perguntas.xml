@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<canavas>
+    <quadro id="1">
+        <textoExplicativo>Segmento de Clientes</textoExplicativo>
+        <questoesChave>Para quem criamos valor? Quais são nossos clientes mais importantes?</questoesChave>
+    </quadro>
+    <quadro id="2">
+        <textoExplicativo>Proposta de Valor</textoExplicativo>
+        <questoesChave>Que valor proporcionou a nossos clientes? Que problemas de nossos clientes estão solucionados?</questoesChave>
+    </quadro>
+    <quadro id="3">
+        <textoExplicativo>Canais (Distribuição e Comunicação)</textoExplicativo>
+        <questoesChave>Que meios preferem utilizar nosso segmento de mercado? Como estabelecer contato com os clientes?</questoesChave>
+    </quadro>
+    <quadro id="4">
+        <textoExplicativo>Relacionamento com clientes</textoExplicativo>
+        <questoesChave>Que tipo de relacionamento que cada segmento de cliente espera ter para estabelecer e manter sua preferencia?</questoesChave>
+    </quadro>
+    <quadro id="5">
+        <textoExplicativo>Receitas</textoExplicativo>
+        <questoesChave>Porque valor os nossos clientes realmente estão dispostos a pagar? Como gostariam de pagar?</questoesChave>
+    </quadro>
+    <quadro id="6">
+        <textoExplicativo>Recursos Chave</textoExplicativo>
+        <questoesChave>Que recursos físicos, humanos, intelectuais ou econômicos são essenciais? Coisas Imprescindíveis?</questoesChave>
+    </quadro>
+    <quadro id="7">
+        <textoExplicativo>Atividades Chave</textoExplicativo>
+        <questoesChave>O que devemos Saber e fazer?</questoesChave>
+    </quadro>
+    <quadro id="8">
+        <textoExplicativo>Parcerias Chave</textoExplicativo>
+        <questoesChave>Quem são nossos parceiros e provedores fundamentais?</questoesChave>
+    </quadro>
+    <quadro id="9">
+        <textoExplicativo>Custos</textoExplicativo>
+        <questoesChave>Quais são os custos mais importantes do modelo de negocio.</questoesChave>
+    </quadro>
+    
+</canavas>
