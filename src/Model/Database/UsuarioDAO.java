@@ -46,4 +46,28 @@ public class UsuarioDAO {
         }
     }
 
+    public String checkLogin(String email, String senha) {
+
+        String sql = "SELECT u.papel FROM usuario u WHERE u.email = (?) AND "
+                + "u.senha = (?) AND u.status = 'Ativo'";
+        
+        try {
+            pstm = connection.prepareStatement(sql);
+            pstm.setString(1, email);
+            pstm.setString(2, senha);
+
+            pstm.execute();
+            rs = pstm.getResultSet();
+            
+            if (rs.next()) {
+                return rs.getString(1);
+            } else {
+                return "";
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
