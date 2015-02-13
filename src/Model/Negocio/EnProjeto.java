@@ -75,5 +75,4 @@ public class EnProjeto {
     public Projeto getProjetoPorID(int id) {
         return daoProjeto.getProjetoPorID(id);
     }
-
 }
