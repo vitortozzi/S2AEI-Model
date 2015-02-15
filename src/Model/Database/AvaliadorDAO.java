@@ -1,4 +1,3 @@
-
 package Model.Database;
 
 import Model.Tabelas.Avaliador;
@@ -22,7 +21,7 @@ public class AvaliadorDAO {
     }
 
     public String checkEmailExists(String email) {
-        
+
         String emailResult = "";
         String sql = "SELECT u.email FROM usuario u WHERE u.email = (?)";
 
@@ -32,11 +31,11 @@ public class AvaliadorDAO {
 
             pstm.execute();
             rs = pstm.getResultSet();
-            
+
             while (rs.next()) {
                 emailResult = rs.getString(1);
             }
-            
+
             pstm.close();
 
         } catch (SQLException e) {
@@ -44,9 +43,9 @@ public class AvaliadorDAO {
         }
 
         return emailResult;
-        
+
     }
-    
+
     public Avaliador getAvaliador(String email) {
 
         av = new Avaliador();
@@ -71,7 +70,7 @@ public class AvaliadorDAO {
                 av.setFormacao(rs.getString(7));
             }
 
-            }catch (SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
@@ -165,7 +164,7 @@ public class AvaliadorDAO {
     public boolean editAvaliador(Avaliador av) {
 
         boolean check1 = false, check2 = false;
-        
+
         // update na tabela usuario
         String sql = "UPDATE usuario SET nome = (?), senha = (?), ultima_modificacao = curdate(), status = (?) WHERE usuario.email = (?)";
 
@@ -175,7 +174,7 @@ public class AvaliadorDAO {
             pstm.setString(2, av.getSenha());
             pstm.setString(3, av.getStatus());
             pstm.setString(4, av.getEmail());
-            
+
             pstm.execute();
             pstm.close();
 
@@ -184,16 +183,16 @@ public class AvaliadorDAO {
             check1 = false;
 //            throw new RuntimeException(e);
         }
-        
+
         // update na tabela avaliador
         sql = "UPDATE avaliador SET area = (?), formacao = (?) WHERE avaliador.email = (?)";
-        
+
         try {
             pstm = connection.prepareStatement(sql);
             pstm.setString(1, av.getArea());
             pstm.setString(2, av.getFormacao());
             pstm.setString(3, av.getEmail());
-            
+
             pstm.execute();
             pstm.close();
 
@@ -202,10 +201,12 @@ public class AvaliadorDAO {
             check2 = false;
 //            throw new RuntimeException(e);
         }
-        
-        
-        if (!check1 || !check2) return false;
-        else return true;
+
+        if (!check1 || !check2) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public boolean deleteAvaliador(String email) {
@@ -227,4 +228,34 @@ public class AvaliadorDAO {
         return true;
 
     }
+
+    public ArrayList<Avaliador> getAvaliadoresProjeto(String nomeProjeto) {
+
+        Avaliador avaliador;
+        ArrayList<Avaliador> avaliadores;
+
+        String sql = "SELECT email_avaliador, usuario.nome FROM avalia, projeto, usuario WHERE projeto.titulo = '" + nomeProjeto
+                + "' and  projeto.id = avalia.id_projeto and avalia.email_avaliador = usuario.email";
+
+        try {
+            pstm = connection.prepareStatement(sql);
+            pstm.execute();
+            rs = pstm.getResultSet();
+            avaliadores = new ArrayList<>();
+            while (rs.next()) {
+                avaliador = new Avaliador();
+                avaliador.setEmail(rs.getString(1));
+                avaliador.setNome(rs.getString(2));
+                avaliadores.add(avaliador);
+            }
+            
+            pstm.close();
+            return avaliadores;
+            
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
 }

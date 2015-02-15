@@ -211,7 +211,7 @@ public class ProjetoDAO {
 
         return projetos;
     }
-    
+
     public ArrayList<String> getRespostas(int id) {
 
         ArrayList<String> respostas = new ArrayList<>();
@@ -342,13 +342,13 @@ public class ProjetoDAO {
             pstm.setString(1, novoStatus);
             pstm.setString(2, emailLider);
             pstm.execute();
-            
+
             return true;
         } catch (SQLException e) {
             return false;
         }
     }
-    
+
     public ArrayList<String> checkRespostas(int id_projeto) {
 
         ArrayList<String> respostas = new ArrayList<>();
@@ -384,7 +384,7 @@ public class ProjetoDAO {
         try {
             pstm = connection.prepareStatement(sql);
             pstm.setString(1, avaliador.getNome());
-            pstm.setInt(1, projeto.getId());
+            pstm.setInt(2, projeto.getId());
 
             pstm.execute();
             pstm.close();
@@ -409,7 +409,7 @@ public class ProjetoDAO {
                 pstm = connection.prepareStatement(sql);
                 pstm.setInt(1, projeto.getId());
                 pstm.setInt(2, i);
-                pstm.setString(3, avaliador.getNome());             
+                pstm.setString(3, avaliador.getNome());
                 pstm.execute();
             }
             pstm.close();
@@ -417,5 +417,41 @@ public class ProjetoDAO {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public boolean deleteAvaliadorProjeto(Projeto projeto, String nomeAvaliador) {
+
+        if (deleteAvaliacao(projeto, nomeAvaliador)) {
+            String sql = "DELETE FROM avalia WHERE id_projeto = (?) and email_avaliador = (SELECT email "
+                    + "FROM usuario WHERE usuario.nome = (?))";
+            try {
+                pstm = connection.prepareStatement(sql);
+                pstm.setInt(1, projeto.getId());
+                pstm.setString(2, nomeAvaliador);
+                pstm.execute();
+                pstm.close();
+                return true;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return false;
+    }
+
+    public boolean deleteAvaliacao(Projeto projeto, String nomeAvaliador) {
+
+        String sql = "DELETE FROM avaliacao WHERE id_projeto = (?) and email_avaliador = "
+                + "(SELECT email FROM usuario WHERE usuario.nome = (?))";
+
+        try {
+            pstm = connection.prepareStatement(sql);
+            pstm.setInt(1, projeto.getId());
+            pstm.setString(2, nomeAvaliador);
+            pstm.execute();
+            pstm.close();
+            return true;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
