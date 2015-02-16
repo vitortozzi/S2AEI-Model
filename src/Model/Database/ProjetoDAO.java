@@ -236,6 +236,49 @@ public class ProjetoDAO {
 
     }
 
+    public ArrayList<String> getComentarios(int id) {
+        
+        ArrayList<String> comentarios = new ArrayList<>();
+        String comentario;
+
+        String sql = "SELECT comentario_orientador FROM respostas WHERE id_projeto = " + id + "";
+
+        try {
+            pstm = connection.prepareStatement(sql);
+            pstm.execute();
+            rs = pstm.getResultSet();
+            while (rs.next()) {
+                comentario = rs.getString(1);
+                comentarios.add(comentario);
+            }
+            pstm.close();
+
+            return comentarios;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        
+    }
+    
+    public boolean addComentario(int idProjeto, int idPergunta, String comentario) {
+        String sql = "UPDATE respostas SET comentario_orientador = (?) "
+                + "WHERE id_projeto = (?) and id_pergunta = (?)";
+
+        try {
+            pstm = connection.prepareStatement(sql);
+            pstm.setString(1, comentario);
+            pstm.setInt(2, idProjeto);
+            pstm.setInt(3, idPergunta);
+            
+            pstm.execute();
+            pstm.close();
+        } catch (SQLException e) {
+            return false;
+        }
+
+        return true;
+    }
+    
     public Projeto getProjetoPorLider(String nome) {
 
         p = new Projeto();
@@ -269,7 +312,7 @@ public class ProjetoDAO {
 
     public Projeto getProjetoPorID(int id) {
 
-        String sql = "SELECT titulo, descricao, status, area, email_orientador, email_lider FROM projeto WHERE id = (?)";
+        String sql = "SELECT id, titulo, descricao, status, area, email_orientador, email_lider FROM projeto WHERE id = (?)";
 
         try {
             pstm = connection.prepareStatement(sql);
@@ -279,12 +322,13 @@ public class ProjetoDAO {
 
             while (rs.next()) {
                 p = new Projeto();
-                p.setTitulo(rs.getString(1));
-                p.setDescricao(rs.getString(2));
-                p.setStatus(rs.getString(3));
-                p.setArea(rs.getString(4));
-                p.setOrientador(rs.getString(5));
-                p.setLider(rs.getString(6));
+                p.setId(rs.getInt(1));
+                p.setTitulo(rs.getString(2));
+                p.setDescricao(rs.getString(3));
+                p.setStatus(rs.getString(4));
+                p.setArea(rs.getString(5));
+                p.setOrientador(rs.getString(6));
+                p.setLider(rs.getString(7));
             }
             pstm.close();
             return p;
