@@ -25,6 +25,15 @@ public class Projeto {
     private String orientador;
     private ArrayList<String> perguntas;
     private ArrayList<String> respostas;
+    private ArrayList<Double> notas;
+
+    public ArrayList<Double> getNotas() {
+        return notas;
+    }
+
+    public void setNotas(ArrayList<Double> notas) {
+        this.notas = notas;
+    }
 
     public int getId() {
         return id;
