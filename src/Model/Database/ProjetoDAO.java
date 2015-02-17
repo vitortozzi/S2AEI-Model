@@ -237,7 +237,7 @@ public class ProjetoDAO {
     }
 
     public ArrayList<String> getComentarios(int id) {
-        
+
         ArrayList<String> comentarios = new ArrayList<>();
         String comentario;
 
@@ -257,9 +257,9 @@ public class ProjetoDAO {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        
+
     }
-    
+
     public boolean addComentario(int idProjeto, int idPergunta, String comentario) {
         String sql = "UPDATE respostas SET comentario_orientador = (?) "
                 + "WHERE id_projeto = (?) and id_pergunta = (?)";
@@ -269,7 +269,7 @@ public class ProjetoDAO {
             pstm.setString(1, comentario);
             pstm.setInt(2, idProjeto);
             pstm.setInt(3, idPergunta);
-            
+
             pstm.execute();
             pstm.close();
         } catch (SQLException e) {
@@ -278,7 +278,7 @@ public class ProjetoDAO {
 
         return true;
     }
-    
+
     public Projeto getProjetoPorLider(String nome) {
 
         p = new Projeto();
@@ -445,8 +445,8 @@ public class ProjetoDAO {
 
     public void populaAvalicacao(Avaliador avaliador, Projeto projeto) {
 
-        String sql = "INSERT INTO avaliacao (id_projeto, id_pergunta, email_avaliador) VALUES"
-                + " (?, ?, (SELECT email FROM usuario WHERE nome = (?)))";
+        String sql = "INSERT INTO avaliacao (id_projeto, id_pergunta, email_avaliador, nota_avaliador) VALUES"
+                + " (?, ?, (SELECT email FROM usuario WHERE nome = (?)), -1)";
 
         try {
             for (int i = 1; i < 10; i++) {
@@ -495,6 +495,168 @@ public class ProjetoDAO {
             pstm.close();
             return true;
         } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean setNotas(int idPergunta, String emailAvaliador, int idProjeto, double nota) {
+
+        String sql = "UPDATE avaliacao SET nota_avaliador = (?) WHERE id_projeto = (?) and email_avaliador = (?) and id_pergunta = (?)";
+
+        try {
+            pstm = connection.prepareStatement(sql);
+            pstm.setDouble(1, nota);
+            pstm.setInt(2, idProjeto);
+            pstm.setString(3, emailAvaliador);
+            pstm.setInt(4, idPergunta);
+            pstm.execute();
+            pstm.close();
+            return true;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public ArrayList<Double> getNotasProjetoPorAvaliador(int idProjeto, String emailAvaliador) {
+
+        String sql = "SELECT nota_avaliador FROM avaliacao WHERE id_projeto = (?) and"
+                + " email_avaliador = (?)";
+
+        ArrayList<Double> notas = new ArrayList<>();
+
+        try {
+            pstm = connection.prepareStatement(sql);
+            pstm.setInt(1, idProjeto);
+            pstm.setString(2, emailAvaliador);
+            pstm.execute();
+            rs = pstm.getResultSet();
+            while (rs.next()) {
+                notas.add(rs.getDouble(1));
+            }
+            pstm.close();
+            return notas;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean checkFinalizarProjeto(int idProjeto) {
+
+        String sql = "SELECT nota_avaliador FROM avaliacao WHERE id_projeto = (?)";
+
+        try {
+            pstm = connection.prepareStatement(sql);
+            pstm.setInt(1, idProjeto);
+            pstm.execute();
+            rs = pstm.getResultSet();
+            while (rs.next()) {
+                if (rs.getDouble(1) == -1) {
+                    return false;
+                }
+            }
+            pstm.close();
+            return true;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+    
+    public int countAvaliadoresProjeto(int idProjeto){
+        
+        String sql = "SELECT COUNT(distinct email_avaliador) from avaliacao where id_projeto = (?)";
+        
+        try{
+            pstm = connection.prepareStatement(sql);
+            pstm.setInt(1, idProjeto);
+            pstm.execute();
+            rs = pstm.getResultSet();
+            while(rs.next()){
+                return rs.getInt(1);
+            }
+            pstm.close();
+        }catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return 0;
+    }
+    
+    public ArrayList<Projeto> getProjetosAvaliador(String emailAvaliador){
+        
+        ArrayList<Projeto> projetos = new ArrayList<>();
+        
+        String sql = "SELECT p.id, p.titulo, lider.nome, professor.nome, p.data_criacao, p.ultima_modificacao, "
+                + "p.status FROM projeto p, usuario lider, usuario professor WHERE lider.email = p.email_lider and "
+                + "p.email_orientador = professor.email and p.id in (SELECT id_projeto FROM avalia WHERE email_avaliador = (?))";
+
+        try {
+            pstm = connection.prepareStatement(sql);
+            pstm.setString(1, emailAvaliador);
+
+            pstm.execute();
+
+            rs = pstm.getResultSet();
+            while (rs.next()) {
+                p = new Projeto();
+                p.setId(rs.getInt(1));
+                p.setTitulo(rs.getString(2));
+                p.setLider(rs.getString(3));
+                p.setOrientador(rs.getString(4));
+                p.setDataCriacao(rs.getString(5));
+                p.setUltimaModificacao(rs.getString(6));
+                p.setStatus(rs.getString(7));
+                projetos.add(p);
+            }
+            pstm.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return projetos;
+    }
+    
+    public boolean FinalizaAndCalculaNota(int projetoId){
+        
+        double notaFinal = 0;
+        
+        String sql = "SELECT (SELECT SUM(nota_avaliador) FROM avaliacao WHERE "
+                + "id_projeto = (?))/((SELECT COUNT(distinct email_avaliador) FROM avaliacao "
+                + "WHERE id_projeto = (?))*9)";
+        
+        try{
+           pstm = connection.prepareStatement(sql);
+           pstm.setInt(1, projetoId);
+           pstm.setInt(2, projetoId);
+           pstm.execute();
+           rs = pstm.getResultSet();
+           while(rs.next()){
+               notaFinal = rs.getDouble(1);
+           }
+           pstm.close();
+        }catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        
+        String status;
+        if(notaFinal>=7){
+            status = "Aprovado";
+        }
+        else{
+            status = "Reprovado";
+        }
+        
+        sql = "UPDATE projeto SET nota = (?), status = (?) WHERE id = (?)";
+        
+        try{
+            pstm = connection.prepareStatement(sql);
+            pstm.setDouble(1, notaFinal);
+            pstm.setString(2, status);
+            pstm.setInt(3, projetoId);
+            pstm.execute();
+            pstm.close();
+            return true;
+        }catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }

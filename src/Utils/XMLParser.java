@@ -26,7 +26,7 @@ public class XMLParser {
     Element mural;
     
     public XMLParser() {
-        f = new File("D:\\Vítor\\Documentos\\NetBeansProjects\\S2AEI-Model\\src\\assets\\perguntas.txt");
+        f = new File("C:\\Users\\Vítor\\Documents\\NetBeansProjects\\S2AEI-Model\\src\\assets\\perguntas.txt");
         sb = new SAXBuilder();
     }
     
