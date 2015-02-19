@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Model.Database;
 
 import Model.Tabelas.Avaliador;
@@ -13,10 +9,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-/**
- *
- * @author Vítor
- */
 public class ProjetoDAO {
 
     private Connection connection;
@@ -378,13 +370,13 @@ public class ProjetoDAO {
         }
     }
 
-    public boolean alteraStatusProjetoAprovado(String emailLider, String novoStatus) {
-        String sql = "UPDATE projeto SET status = (?) WHERE email_lider = (?)";
+    public boolean alteraStatusProjetoAprovado(String nomeLider, String novoStatus) {
+        String sql = "UPDATE projeto SET status = (?) WHERE email_lider IN (SELECT email from usuario where nome = (?))";
 
         try {
             pstm = connection.prepareStatement(sql);
             pstm.setString(1, novoStatus);
-            pstm.setString(2, emailLider);
+            pstm.setString(2, nomeLider);
             pstm.execute();
 
             return true;

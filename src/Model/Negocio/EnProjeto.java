@@ -1,30 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Model.Negocio;
 
-import Utils.XMLParser;
 import Model.Database.AlunoDAO;
 import Model.Database.ProfessorDAO;
 import Model.Database.ProjetoDAO;
+import Model.Tabelas.Avaliador;
 import Model.Tabelas.Projeto;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.jdom2.JDOMException;
 
-/**
- *
- * @author Vítor
- */
 public class EnProjeto {
 
-    AlunoDAO daoAluno;
-    ProjetoDAO daoProjeto;
-    ProfessorDAO daoProfessor;
+    private AlunoDAO daoAluno;
+    private ProjetoDAO daoProjeto;
+    private ProfessorDAO daoProfessor;
 
     public EnProjeto() {
         this.daoAluno = new AlunoDAO();
@@ -32,6 +20,18 @@ public class EnProjeto {
         this.daoProfessor = new ProfessorDAO();
     }
 
+    public boolean alteraStatusProjetoAprovado(String nomeLider, String novoStatus) {
+        return daoProjeto.alteraStatusProjetoAprovado(nomeLider, novoStatus);
+    }
+    
+    public boolean addComentario(int idProjeto, int idPergunta, String comentario) {
+        return daoProjeto.addComentario(idProjeto, idPergunta, comentario);
+    }
+    
+    public ArrayList<String> getComentarios(int idProjeto) {
+        return daoProjeto.getComentarios(idProjeto);
+    }
+    
     public boolean jaLideraProjeto(String nomeLider) {
         if (daoAluno.AlunosIsLeader(nomeLider)) {
             return true;
@@ -39,14 +39,30 @@ public class EnProjeto {
         return false;
     }
 
+    public boolean setAvaliadorProjeto(Avaliador ava, Projeto p) {
+        return daoProjeto.setAvaliadorProjeto(ava, p);
+    }
+    
+    public boolean deleteAvaliadorProjeto(Projeto p, String nomeAva) {
+        return daoProjeto.deleteAvaliadorProjeto(p, nomeAva);
+    }
+    
     public boolean criaProjeto(Projeto projeto) {
         return daoProjeto.insertProjeto(projeto);
     }
 
+    public ArrayList<Projeto> getProjetos() {
+        return daoProjeto.getProjetos();
+    }
+    
     public Projeto getProjetoPorLider(String nome) {
         return daoProjeto.getProjetoPorLider(nome);
     }
 
+    public ArrayList<Projeto> getProjetosAvaliador(String email) {
+        return daoProjeto.getProjetosAvaliador(email);
+    }
+    
     public boolean finalizaProjeto(int id) {
         return daoProjeto.finalizaProjeto(id);
     }
@@ -69,10 +85,32 @@ public class EnProjeto {
         } else if (tipoEntidade.equals("Professor")) {
             return daoProjeto.getProjetosOrientador(nome);
         }
+
         return null;
     }
 
     public Projeto getProjetoPorID(int id) {
         return daoProjeto.getProjetoPorID(id);
     }
+    
+    public boolean setNotas(int idPergunta, String emailAvaliador, int idProjeto, double nota) {
+        return daoProjeto.setNotas(idPergunta, emailAvaliador, idProjeto, nota);
+    }
+    
+    public ArrayList<Double> getNotasProjetoPorAvaliador(int idProjeto, String emailAvaliador) {
+        return daoProjeto.getNotasProjetoPorAvaliador(idProjeto, emailAvaliador);
+    }
+    
+    public boolean checkFinalizarProjeto(int idProjeto) {
+        return daoProjeto.checkFinalizarProjeto(idProjeto);
+    }
+    
+    public int countAvaliadoresProjeto(int idProjeto) {
+        return daoProjeto.countAvaliadoresProjeto(idProjeto);
+    }
+
+    public boolean finalizaAndCalculaNota(int idProjeto) {
+        return daoProjeto.FinalizaAndCalculaNota(idProjeto);
+    }
+    
 }

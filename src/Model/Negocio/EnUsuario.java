@@ -1,14 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Model.Negocio;
 
-/**
- *
- * @author Vítor
- */
+import Model.Database.UsuarioDAO;
+
 public class EnUsuario {
     
+    private UsuarioDAO userDAO;
+    
+    public EnUsuario() {
+        userDAO = new UsuarioDAO();
+    }
+    
+    public String checkLogin(String userEmail, String userPass) {
+        return userDAO.checkLogin(userEmail, userPass);
+    }
 }
