@@ -84,7 +84,7 @@ public class ProjetoDAO {
     public boolean addParticipantes(Projeto projeto) {
 
         String sql = "INSERT INTO participa (id_projeto, email_aluno) VALUES ((SELECT id FROM projeto WHERE email_lider = "
-                + " (SELECT email FROM usuario WHERE usuario.nome = (?))), (SELECT email FROM usuario WHERE usuario.nome = (?))) ";
+                + " (SELECT email FROM usuario WHERE usuario.nome = (?))and projeto.status = 'Novo'), (SELECT email FROM usuario WHERE usuario.nome = (?))) ";
 
         try {
             pstm = connection.prepareStatement(sql);
@@ -276,8 +276,9 @@ public class ProjetoDAO {
         p = new Projeto();
 
         String sql = "SELECT p.id, p.titulo, p.descricao, p.data_criacao, p.ultima_modificacao, p.status, p.area, (SELECT nome FROM usuario WHERE email = p.email_orientador)"
-                + " FROM projeto p WHERE email_lider in (SELECT u.email FROM usuario u WHERE u.nome = (?))";
-
+                + " FROM projeto p WHERE email_lider in (SELECT u.email FROM usuario u WHERE u.nome = (?)) AND p.status = 'Novo' OR "
+                + "p.status = 'Em preenchimento'";
+             
         try {
             pstm = connection.prepareStatement(sql);
             pstm.setString(1, nome);
@@ -370,13 +371,13 @@ public class ProjetoDAO {
         }
     }
 
-    public boolean alteraStatusProjetoAprovado(String nomeLider, String novoStatus) {
-        String sql = "UPDATE projeto SET status = (?) WHERE email_lider IN (SELECT email from usuario where nome = (?))";
+    public boolean alteraStatusProjetoAprovado(int idProjeto, String novoStatus) {
+        String sql = "UPDATE projeto SET status = (?) WHERE projeto.id =  (?)";
 
         try {
             pstm = connection.prepareStatement(sql);
             pstm.setString(1, novoStatus);
-            pstm.setString(2, nomeLider);
+            pstm.setInt(2, idProjeto);
             pstm.execute();
 
             return true;
