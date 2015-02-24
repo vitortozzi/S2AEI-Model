@@ -2,7 +2,7 @@
 package Model.Negocio;
 
 import Model.Database.AdministradorDAO;
-import Model.Tabelas.Administrador;
+import Model.Entidades.Administrador;
 import java.util.ArrayList;
 
 public class EnAdministrador {

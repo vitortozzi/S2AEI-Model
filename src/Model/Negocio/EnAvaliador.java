@@ -2,7 +2,7 @@
 package Model.Negocio;
 
 import Model.Database.AvaliadorDAO;
-import Model.Tabelas.Avaliador;
+import Model.Entidades.Avaliador;
 import java.util.ArrayList;
 
 public class EnAvaliador {

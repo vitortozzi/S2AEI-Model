@@ -4,8 +4,8 @@ package Model.Negocio;
 import Model.Database.AlunoDAO;
 import Model.Database.ProfessorDAO;
 import Model.Database.ProjetoDAO;
-import Model.Tabelas.Avaliador;
-import Model.Tabelas.Projeto;
+import Model.Entidades.Avaliador;
+import Model.Entidades.Projeto;
 import java.util.ArrayList;
 
 public class EnProjeto {
@@ -20,8 +20,8 @@ public class EnProjeto {
         this.daoProfessor = new ProfessorDAO();
     }
 
-    public boolean alteraStatusProjetoAprovado(String nomeLider, String novoStatus) {
-        return daoProjeto.alteraStatusProjetoAprovado(nomeLider, novoStatus);
+    public boolean alteraStatusProjetoAprovado(int idProjeto, String novoStatus) {
+        return daoProjeto.alteraStatusProjetoAprovado(idProjeto, novoStatus);
     }
     
     public boolean addComentario(int idProjeto, int idPergunta, String comentario) {

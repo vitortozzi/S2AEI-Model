@@ -2,7 +2,7 @@
 package Model.Negocio;
 
 import Model.Database.AlunoDAO;
-import Model.Tabelas.Aluno;
+import Model.Entidades.Aluno;
 import java.util.ArrayList;
 
 public class EnAluno {

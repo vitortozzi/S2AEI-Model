@@ -2,7 +2,7 @@
 package Model.Negocio;
 
 import Model.Database.ProfessorDAO;
-import Model.Tabelas.Professor;
+import Model.Entidades.Professor;
 import java.util.ArrayList;
 
 public class EnProfessor {
