@@ -1,7 +1,7 @@
 
 package Model.Database;
 
-import Model.Tabelas.Professor;
+import Model.Entidades.Professor;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

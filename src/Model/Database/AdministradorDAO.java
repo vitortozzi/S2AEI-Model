@@ -1,7 +1,7 @@
 
 package Model.Database;
 
-import Model.Tabelas.Administrador;
+import Model.Entidades.Administrador;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

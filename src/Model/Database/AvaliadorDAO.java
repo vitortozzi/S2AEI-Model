@@ -1,6 +1,6 @@
 package Model.Database;
 
-import Model.Tabelas.Avaliador;
+import Model.Entidades.Avaliador;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

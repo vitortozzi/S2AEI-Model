@@ -1,8 +1,8 @@
 
 package Model.Database;
 
-import Model.Tabelas.Avaliador;
-import Model.Tabelas.Projeto;
+import Model.Entidades.Avaliador;
+import Model.Entidades.Projeto;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

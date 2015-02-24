@@ -1,7 +1,7 @@
 
 package Model.Database;
 
-import Model.Tabelas.Aluno;
+import Model.Entidades.Aluno;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
